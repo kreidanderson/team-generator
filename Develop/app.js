@@ -1,7 +1,6 @@
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
-// const Employee = require("./lib/Employee")
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
@@ -23,7 +22,7 @@ const baseQuestions = [
         type: "input",
         message: "What is the employee's ID number?",
         name: "id",
-        // is it going to generate a random number? and if not, does it give error if that number already exists?
+        
         },
         {
         type: "input",
@@ -70,17 +69,15 @@ function init() {
         if(response.role === "Intern"){
             inquirer.prompt(internQuestion).then(response2 => {
                 const intern = new Intern(response.name, response.id, response.email, response2.college);
+                employees.push(intern);
+                writeToHtml();
                 inquirer.prompt(moreEmployees).then(response3 => {
-                    // employees.push(intern);
                     if (response3.another === "yes"){
-                        employees.push(intern);
                         init()
                     }
                     else if(response3.another === "no"){
-                        employees.push(intern);
                        return "Your team page is complete!"
 
-                        
                     }
                    
 
@@ -91,15 +88,13 @@ function init() {
         else if(response.role === "Manager"){
             inquirer.prompt(managerQuestion).then(response2 => {
                 const manager = new Manager(response.name, response.id, response.email, response2.office);
+                employees.push(manager);
+                writeToHtml();
                 inquirer.prompt(moreEmployees).then(response3 => {
-                    // employees.push(manager);
-                   
                     if (response3.another === "yes"){
-                        employees.push(manager);
                         init()
                     }
                     else if(response3.another === "no"){
-                        employees.push(manager);
                         return "Your team page is complete!"
                         
                     }
@@ -111,14 +106,14 @@ function init() {
         else if(response.role === "Engineer"){
             inquirer.prompt(engineerQuestion).then(engineerQ => {
                 const engineer = new Engineer(response.name, response.id, response.email, engineerQ.github);
+                employees.push(engineer);
+                writeToHtml();
                 inquirer.prompt(moreEmployees).then(response3 => {
-                    // employees.push(engineer);
                     if (response3.another === "yes"){
-                        employees.push(engineer);
+                        
                         init()
                     }
                     else if(response3.another === "no"){
-                        employees.push(engineer);
                         return "Your team page is complete!"
                         
                     }
@@ -129,21 +124,20 @@ function init() {
                 
             })
         }
-    
+   
+
+function writeToHtml(){
     fs.writeFile(outputPath, render(employees), function (err) {
             if (err) {
                 return Error
             }
-          
-    
         });
-        
+    } 
+
     });
 
 
 };
-
-
 
 
 init();
